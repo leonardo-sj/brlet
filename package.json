@@ -1,0 +1,24 @@
+{
+  "name": "brlet",
+  "version": "0.0.1",
+  "description": "Simple web cryptocoins exchange",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "bip38": "^2.0.1",
+    "bip39": "^2.3.1",
+    "bitcoinjs-lib": "^3.0.3",
+    "body-parser": "^1.17.2",
+    "compression": "^1.6.2",
+    "consign": "^0.1.5",
+    "express": "^4.15.3",
+    "helmet": "^3.6.1",
+    "jsonwebtoken": "^7.4.1",
+    "mongo-sanitize": "^1.0.0",
+    "mongoose": "^4.10.4",
+    "morgan": "^1.8.2"
+  }
+}

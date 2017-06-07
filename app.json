@@ -1,0 +1,6 @@
+{
+  "name": "BRlet",
+  "description": "Experimental exchange to cryptocoins",
+  "repository": "https://github.com/heroku/node-js-getting-started",
+  "keywords": ["exchange", "bitcoin", "altcoins", "cryptocurrency"]
+}
