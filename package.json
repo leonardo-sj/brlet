@@ -20,6 +20,7 @@
     "jsonwebtoken": "^7.4.1",
     "mongo-sanitize": "^1.0.0",
     "mongoose": "^4.10.4",
-    "morgan": "^1.8.2"
+    "morgan": "^1.8.2",
+    "unirest": "^0.5.1"
   }
 }
