@@ -32,5 +32,15 @@ let restoreBitcoinWallet = function() {
 	});
 }
 
+let restoreDashWallet = function() {
+	let req = unirest("GET", "https://brlet.herokuapp.com/wallets/restoreDashWallet");
+
+	req.end(function (res) {
+		console.log(res.status);
+	 	console.log(res.body);
+	});
+}
+
 signUp("Benoit Murugan", "benoit.murugan@email.com", "293.676.434-38", "pTsnap'eFgyFx`A,");
 restoreBitcoinWallet();
+restoreDashWallet();

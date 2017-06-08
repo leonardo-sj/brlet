@@ -5,5 +5,7 @@ module.exports = function(app) {
 
 	router.get('/restoreBitcoinWallet', walletController.restoreBitcoinWallet);
 
+	router.get('/restoreDashWallet', walletController.restoreDashWallet);
+
 	app.use('/wallets', router);
 }

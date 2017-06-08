@@ -1,12 +1,15 @@
 let bitcoin = require('bitcoinjs-lib')
 let crypto = require('crypto')
+let bitcore = require('bitcore-lib-dash')
 
 module.exports = function(app) {
 
+	let Wallet = app.models.wallet;
+	let algorithm = 'aes-256-ctr';
+	let bitcoinWalletSecret = process.env.BITCOIN_WALLET_SECRET;
+
 	let WalletController = {
 		restoreBitcoinWallet: function(req, res) {
-
-			let Wallet = app.models.wallet;
 
 			Wallet.findOne({code: 'BTC'}, function(err, wallet) {
 				if (err) {
@@ -16,15 +19,13 @@ module.exports = function(app) {
 					});
 				}
 
-				let publicKeyAddress = null;
-				let algorithm = 'aes-256-ctr'
-				let bitcoinWalletSecret = process.env.BITCOIN_WALLET_SECRET;
+				let address = null;
 
 				if (!wallet) {
 					let keyPair = bitcoin.ECPair.makeRandom()
 					let encryptedKey = encrypt(keyPair.toWIF(), algorithm, bitcoinWalletSecret);
 
-					publicKeyAddress = keyPair.getAddress();
+					address = keyPair.getAddress();
 
 					new Wallet({
 						name: 'Bitcoin',
@@ -42,12 +43,53 @@ module.exports = function(app) {
 				} else {
 					let privateKeyWIF = decrypt(wallet.encryptedPrivateKey, algorithm, bitcoinWalletSecret);
 					let keyPair = bitcoin.ECPair.fromWIF(privateKeyWIF);
-					publicKeyAddress = keyPair.getAddress();
+					address = keyPair.getAddress();
 				}
 
-				return res.json({publicKeyAddress: publicKeyAddress});
+				return res.json({address: address});
 			});
 		},
+
+		restoreDashWallet: function(req, res) {
+			Wallet.findOne({code: 'DASH'}, function(err, wallet) {
+
+				if (err) {
+					return res.status(500).json({
+						message: 'An error occured',
+						error: err
+					});
+				}
+
+				let address = null;
+
+				if (!wallet) {
+
+					let privateKey = new bitcore.PrivateKey();
+					let encryptedKey = encrypt(privateKey.toWIF(), algorithm, bitcoinWalletSecret);
+
+					address = `${privateKey.toAddress()}`;
+
+					new Wallet({
+						name: 'Dash',
+						code: 'DASH',
+						encryptedPrivateKey: encryptedKey
+					}).save(function (err, user) {
+						if (err) {
+							return res.status(500).json({
+								message: 'An error occured',
+								error: err
+							});
+						}
+					});
+
+				} else {
+					let privateKeyWIF = decrypt(wallet.encryptedPrivateKey, algorithm, bitcoinWalletSecret);
+					address = `${new bitcore.PrivateKey(privateKeyWIF).toAddress()}`;
+				}
+
+				return res.json({address: address});
+			});
+		}
 	}
 
 	return WalletController;
